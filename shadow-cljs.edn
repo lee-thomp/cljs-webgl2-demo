@@ -1,0 +1,15 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src"
+  "resources"]
+
+ :dependencies
+ [[reagent "2.0.1"]
+  [cider/cider-nrepl "0.63.1"]]
+
+ :builds
+ {:demo {:target :browser
+         :output-dir "public/js"
+         :modules {:main {:init-fn demo.core/main}}
+         :devtools {:http-root "public"
+                    :http-port 8080}}}}

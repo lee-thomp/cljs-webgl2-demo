@@ -1,0 +1,22 @@
+/*-*- mode:css; coding:utf-8 -*-*/
+
+html {
+    font-family: monospace;
+}
+
+div:hover {
+    border: 2px solid darkcyan;
+    margin: 0px;
+}
+
+#gl {
+    height: 480px;
+    width: 480px;
+    display: block;
+    border: 2px solid darkcyan;
+}
+
+#sliders {
+    display: block;
+    width: 480px;
+}

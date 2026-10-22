@@ -1,0 +1,54 @@
+(ns demo.core
+  (:require [reagent.dom.client :as rd]
+            [reagent.core :as r]
+            [demo.draw :as d]))
+
+(defonce trs
+  (r/atom {:tx 0 :ty -100 :tz -600
+           :rx -0.3 :ry 0 :rz 0
+           :scale 1}))
+
+(defn slider [key min max]
+  [:div
+   [:label (str key " " (.toFixed (key @trs) 2))]
+   [:input {:id key
+            :type "range"
+            :min min
+            :max max
+            :step 0.01
+            :value (key @trs)
+            :on-change #(swap! trs assoc key (js/parseFloat
+                                              (-> % .-target .-value)))}]])
+
+(defn demo-ui []
+  (r/create-class
+   {:component-did-mount
+    #(d/start-animation-loop "gl" trs)
+
+    :reagent-render
+    (fn []
+      [:main
+       [:h1 "CLJS WebGL2 Demo"]
+       [:canvas {:id "gl"
+                 :height 480
+                 :width 480}]
+       [:div#sliders
+        (slider :tx -400 400)
+        (slider :ty -400 400)
+        (slider :tz -2000 0)
+        (slider :rx (- js/Math.PI) js/Math.PI)
+        (slider :ry 0 (* 2 js/Math.PI))
+        (slider :rz (- js/Math.PI) js/Math.PI)
+        (slider :scale -2 2)]
+       [:p "This is a small WebGL2 demo made using "
+        [:a {:href "https://clojurescript.org"} "ClojureScript"]
+        " via "
+        [:a {:href "https://shadow-cljs.org/"} "shadow-cljs"]
+        ". The content of the demo is all really taken from "
+        [:a {:href "https://webgl2fundamentals.org/"} "webgl2fundamentals.org"]
+        "."]])}))
+
+(defn main []
+  (let [container (js/document.getElementById "body")
+        root (rd/create-root container)]
+    (rd/render root [demo-ui])))

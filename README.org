@@ -1,0 +1,9 @@
+# -*- mode:org; coding:utf-8 -*-
+#+title:   README
+#+date:    [2026-10-22 Thu]
+#+author:  Lee Thompson
+#+options: toc:nil num:nil h:6
+
+* CLJS WebGL2 Demo
+A small WebGL2 demo written in [[https://clojurescript.org][ClojureScript]] using [[https://shadow-cljs.org][shadow-cljs]].  Content of the
+demo is really taken from [[https://webgl2fundamentals.org/][webgl2fundamentals.org]].
