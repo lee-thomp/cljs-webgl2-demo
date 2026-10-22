@@ -5,5 +5,5 @@
 #+options: toc:nil num:nil h:6
 
 ** Summary
-A small WebGL2 demo written in [[https://clojurescript.org][ClojureScript]] using [[https://shadow-cljs.org][shadow-cljs]].  Content of the
-demo is really taken from [[https://webgl2fundamentals.org/][webgl2fundamentals.org]].
+A small WebGL2 demo written in [[https://clojurescript.org][ClojureScript]] using [[https://shadow-cljs.org][shadow-cljs]] and [[https://reagent-project.github.io/][Reagent]].
+Content of the demo is really taken from [[https://webgl2fundamentals.org/][webgl2fundamentals.org]].
