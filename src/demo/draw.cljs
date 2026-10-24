@@ -366,7 +366,9 @@
                    ;; Negative x,y here is preference so controls match movement
                    (m4/translate (- tx) (- ty) tz)
                    (m4/x-rotate rx)
-                   (m4/y-rotate ry)
+                   ;; Rotate y by a half-turn so it's the /obvious/ way round on
+                   ;; page load
+                   (m4/y-rotate (+ js/Math.PI ry))
                    (m4/z-rotate rz)
                    (m4/scale scale scale scale))]
     (resize-canvas-dwim (.-canvas ctx))

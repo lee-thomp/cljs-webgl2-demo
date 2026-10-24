@@ -5,6 +5,7 @@
 
 (defonce trs
   (r/atom {:tx 0 :ty 0 :tz -600
+           ;; Slight x-axis tilt to show 3D on page load
            :rx -0.3 :ry 0 :rz 0
            :scale 1}))
 
