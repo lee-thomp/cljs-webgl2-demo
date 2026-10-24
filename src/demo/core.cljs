@@ -4,14 +4,14 @@
             [demo.draw :as d]))
 
 (defonce trs
-  (r/atom {:tx 0 :ty -100 :tz -600
+  (r/atom {:tx 0 :ty 0 :tz -600
            :rx -0.3 :ry 0 :rz 0
            :scale 1}))
 
 (defonce spin-rate (r/atom 0))
 
 (defn slider [key min max]
-  [:div
+  [:div.control-row
    [:label (str key " " (.toFixed (key @trs) 2))]
    [:input {:id key
             :type "range"
@@ -49,10 +49,18 @@
           (slider :rx (- js/Math.PI) js/Math.PI)
           (slider :ry (- js/Math.PI) js/Math.PI)
           (slider :rz (- js/Math.PI) js/Math.PI)
-          [:p "spin-rate"]
-          [:button {:on-click #(reset! spin-rate -0.005)} "←"]
-          [:button {:on-click #(reset! spin-rate 0)} "✕"]
-          [:button {:on-click #(reset! spin-rate 0.005)} "→"]
+          [:div.control-row
+           [:span.control-label "spin"]
+           [:div.spin-buttons
+            [:button {:type "button"
+                      :aria-label "Spin left"
+                      :on-click #(reset! spin-rate -0.005)} "←"]
+            [:button {:type "button"
+                      :aria-label "Stop spinning"
+                      :on-click #(reset! spin-rate 0)} "✕"]
+            [:button {:type "button"
+                      :aria-label "Spin right"
+                      :on-click #(reset! spin-rate 0.005)} "→"]]]
           (slider :scale -2 2)]
          [:p "This is a small WebGL2 demo made using "
           [:a {:href "https://clojurescript.org"} "ClojureScript"]

@@ -363,8 +363,8 @@
         z-far 2000
         fov (/ js/Math.PI 3.0)          ; 60° FoV
         matrix (-> (m4/perspective fov aspect z-near z-far) ; Perspective
-                   #_(m4/projection client-width client-height 400) ; Orthographic
-                   (m4/translate tx ty tz)
+                   ;; Negative x,y here is preference so controls match movement
+                   (m4/translate (- tx) (- ty) tz)
                    (m4/x-rotate rx)
                    (m4/y-rotate ry)
                    (m4/z-rotate rz)

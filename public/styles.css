@@ -4,11 +4,6 @@ html {
     font-family: monospace;
 }
 
-div:hover {
-    border: 2px solid darkcyan;
-    margin: 0px;
-}
-
 #gl {
     height: 480px;
     width: 480px;
@@ -17,6 +12,32 @@ div:hover {
 }
 
 #sliders {
-    display: block;
+    display: grid;
+    gap: 0.5rem;
     width: 480px;
+}
+
+.control-row {
+    align-items: center;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 8rem 1fr;
+}
+
+.control-row label,
+.control-label {
+    text-align: right;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+.spin-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.spin-buttons button {
+    min-width: 2.25rem;
 }
