@@ -21,32 +21,40 @@
                                               (-> % .-target .-value)))}]])
 
 (defn demo-ui []
-  (r/create-class
-   {:component-did-mount
-    #(d/start-animation-loop "gl" trs)
+  (let [stop-animation-loop (volatile! nil)]
+    (r/create-class
+     {:component-did-mount
+      #(vreset! stop-animation-loop
+                ;; `start-animation-loop` returns a callback to stop itself with
+                (d/start-animation-loop "gl" trs))
 
-    :reagent-render
-    (fn []
-      [:main
-       [:h1 "CLJS WebGL2 Demo"]
-       [:canvas {:id "gl"
-                 :height 480
-                 :width 480}]
-       [:div#sliders
-        (slider :tx -400 400)
-        (slider :ty -400 400)
-        (slider :tz -2000 0)
-        (slider :rx (- js/Math.PI) js/Math.PI)
-        (slider :ry 0 (* 2 js/Math.PI))
-        (slider :rz (- js/Math.PI) js/Math.PI)
-        (slider :scale -2 2)]
-       [:p "This is a small WebGL2 demo made using "
-        [:a {:href "https://clojurescript.org"} "ClojureScript"]
-        " via "
-        [:a {:href "https://shadow-cljs.org/"} "shadow-cljs"]
-        ". The content of the demo is all really taken from "
-        [:a {:href "https://webgl2fundamentals.org/"} "webgl2fundamentals.org"]
-        "."]])}))
+      :component-will-unmount
+      #(when-let [stop @stop-animation-loop]
+        (stop)
+        (vreset! stop-animation-loop nil))
+
+      :reagent-render
+      (fn []
+        [:main
+         [:h1 "CLJS WebGL2 Demo"]
+         [:canvas {:id "gl"
+                   :height 480
+                   :width 480}]
+         [:div#sliders
+          (slider :tx -400 400)
+          (slider :ty -400 400)
+          (slider :tz -2000 0)
+          (slider :rx (- js/Math.PI) js/Math.PI)
+          (slider :ry 0 (* 2 js/Math.PI))
+          (slider :rz (- js/Math.PI) js/Math.PI)
+          (slider :scale -2 2)]
+         [:p "This is a small WebGL2 demo made using "
+          [:a {:href "https://clojurescript.org"} "ClojureScript"]
+          " via "
+          [:a {:href "https://shadow-cljs.org/"} "shadow-cljs"]
+          ". The content of the demo is all really taken from "
+          [:a {:href "https://webgl2fundamentals.org/"} "webgl2fundamentals.org"]
+          "."]])})))
 
 (defn main []
   (let [container (js/document.getElementById "body")

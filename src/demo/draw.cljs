@@ -384,11 +384,20 @@
 
 (defn start-animation-loop [canvas-id trs]
   (let [canvas (js/document.getElementById canvas-id)
-        gl-env (init-gl canvas)]
+        gl-env (init-gl canvas)
+        frame-id (volatile! nil)
+        stopped? (volatile! false)]
     (letfn [(loop [timestamp]
-              ;; Gently rotate
-              (swap! trs update :ry #(mod (+ % 0.005)
-                                          (* 2 js/Math.PI)))
-              (draw gl-env @trs)
-              (js/requestAnimationFrame loop))]
-      (js/requestAnimationFrame loop))))
+              (when-not @stopped?
+                ;; Gently rotate
+                (swap! trs update :ry #(mod (+ % 0.005)
+                                            (* 2 js/Math.PI)))
+                (draw gl-env @trs)
+                (vreset! frame-id (js/requestAnimationFrame loop))))]
+      (vreset! frame-id (js/requestAnimationFrame loop))
+      ;; Return a stop callback so the caller can clean up when it needs to
+      (fn stop-animation-loop []
+        (vreset! stopped? true)
+        (when-let [id @frame-id]
+          (js/cancelAnimationFrame id)
+          (vreset! frame-id nil))))))
