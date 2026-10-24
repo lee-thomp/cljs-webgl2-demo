@@ -20,8 +20,8 @@
             :max max
             :step 0.01
             :value (key @trs)
-            :on-change #(swap! trs assoc key (js/parseFloat
-                                              (-> % .-target .-value)))}]])
+            :on-change #(swap! trs assoc key
+                               (-> % .-target .-value js/parseFloat))}]])
 
 (defn demo-ui []
   (let [stop-animation-loop (volatile! nil)]

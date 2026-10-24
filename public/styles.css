@@ -8,6 +8,14 @@ main {
     max-width: 480px;
 }
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    font-weight: bold;
+}
+
 #gl {
     aspect-ratio: 1;
     height: 100%;
