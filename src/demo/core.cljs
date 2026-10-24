@@ -62,7 +62,7 @@
             [:button {:type "button"
                       :aria-label "Spin right"
                       :on-click #(reset! spin-rate 0.005)} "→"]]]
-          (slider :scale -2 2)]
+          (slider :scale 0.01 2)]
          [:p "This is a small WebGL2 demo made using "
           [:a {:href "https://clojurescript.org"} "ClojureScript"]
           " via "
