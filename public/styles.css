@@ -5,16 +5,20 @@ html {
 }
 
 #gl {
-    height: 480px;
-    width: 480px;
+    aspect-ratio: 1;
+    height: auto;
+    max-width: 480px;
+    width: 100%;
     display: block;
     border: 2px solid darkcyan;
+    box-sizing: border-box;
 }
 
 #sliders {
     display: grid;
     gap: 0.5rem;
-    width: 480px;
+    max-width: 480px;
+    width: 100%;
 }
 
 .control-row {
