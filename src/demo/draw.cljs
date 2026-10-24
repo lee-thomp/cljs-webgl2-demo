@@ -294,12 +294,18 @@
         nil))))
 
 (defn resize-canvas-dwim [canvas]
-  (let [{:js/keys [clientWidth clientHeight width height]} canvas
-        needs-resize? (or (not= clientWidth width)
-                          (not= clientHeight height))]
+  (let [client-width (.-clientWidth canvas)
+        client-height (.-clientHeight canvas)
+        width (.-width canvas)
+        height (.-height canvas)
+        device-pixel-ratio (or (.-devicePixelRatio js/window) 1)
+        display-width (max 1 (.round js/Math (* client-width device-pixel-ratio)))
+        display-height (max 1 (.round js/Math (* client-height device-pixel-ratio)))
+        needs-resize? (or (not= display-width width)
+                          (not= display-height height))]
     (when needs-resize?
-      (set! (.-width canvas) clientWidth)
-      (set! (.-height canvas) clientHeight))
+      (set! (.-width canvas) display-width)
+      (set! (.-height canvas) display-height))
     needs-resize?))
 
 (defn init-gl [canvas]
