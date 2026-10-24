@@ -1,0 +1,25 @@
+on:
+  push:
+    branches: [master]
+
+jobs:
+  make-pages:
+    runs-on: codeberg-small-lazy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - run: npm ci
+      - run: npx shadow-cljs release demo
+
+      - uses: https://codeberg.org/git-pages/action@v2
+        with:
+          site: https://${{ forge.repository_owner }}.codeberg.page/cljs-webgl2-demo/
+          token: ${{ forge.token }}
+          source: public/
