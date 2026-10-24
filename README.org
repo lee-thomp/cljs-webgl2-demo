@@ -8,4 +8,5 @@
 A small WebGL2 demo written in [[https://clojurescript.org][ClojureScript]] using [[https://shadow-cljs.org][shadow-cljs]] and [[https://reagent-project.github.io/][Reagent]].
 Content of the demo is really taken from [[https://webgl2fundamentals.org/][webgl2fundamentals.org]].
 
-View the demo running at [[https://lee-thomp.github.io/cljs-webgl2-demo/][lee-thomp.github.io/cljs-webgl2-demo/]].
+View the demo running at either [[https://lee-thomp.github.io/cljs-webgl2-demo/][lee-thomp.github.io/cljs-webgl2-demo/]] or
+[[https://lee-thomp.codeberg.page/cljs-webgl2-demo/][lee-thomp.codeberg.page/cljs-webgl2-demo/]].

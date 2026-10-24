@@ -73,6 +73,9 @@
           ". View the source for this demo at "
           [:a {:href "https://github.com/lee-thomp/cljs-webgl2-demo"}
            "github.com/lee-thomp/cljs-webgl2-demo"]
+          " or at "
+          [:a {:href "https://lee-thomp.codeberg.page/cljs-webgl2-demo/"}
+           "lee-thomp.codeberg.page/cljs-webgl2-demo"]
           "."]])})))
 
 (defn main []
