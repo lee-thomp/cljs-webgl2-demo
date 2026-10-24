@@ -295,11 +295,13 @@
 
 (defn resize-canvas-dwim [canvas]
   (let [{:js/keys [clientWidth clientHeight width height]} canvas
-        needs-resize? (or (not= clientWidth width)
-                          (not= clientHeight height))]
+        display-width (js/Math.round clientWidth)
+        display-height (js/Math.round clientHeight)
+        needs-resize? (or (not= display-width width)
+                          (not= display-height height))]
     (when needs-resize?
-      (set! (.-width canvas) clientWidth)
-      (set! (.-height canvas) clientHeight))
+      (set! (.-width canvas) display-width)
+      (set! (.-height canvas) display-height))
     needs-resize?))
 
 (defn init-gl [canvas]
@@ -356,9 +358,11 @@
   (let [{:keys [ctx program vao]} gl-env
         {:keys [tx ty tz rx ry rz scale]} trs
         matrix-location (.getUniformLocation ctx program "u_matrix")
-        client-width (-> ctx .-canvas .-clientWidth)
-        client-height (-> ctx .-canvas .-clientHeight)
-        aspect (/ client-width client-height)
+        canvas (.-canvas ctx)
+        _ (resize-canvas-dwim canvas)
+        width (.-width canvas)
+        height (.-height canvas)
+        aspect (/ width height)
         z-near 1
         z-far 2000
         fov (/ js/Math.PI 3.0)          ; 60° FoV
@@ -371,9 +375,8 @@
                    (m4/y-rotate (+ js/Math.PI ry))
                    (m4/z-rotate rz)
                    (m4/scale scale scale scale))]
-    (resize-canvas-dwim (.-canvas ctx))
     (doto ctx
-      (.viewport 0 0 client-width client-height)
+      (.viewport 0 0 width height)
       (.clearColor 0 0 0 0)
       (.clear (bit-or glc/color-buffer-bit
                       glc/depth-buffer-bit))
