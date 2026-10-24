@@ -4,10 +4,13 @@ html {
     font-family: monospace;
 }
 
+main {
+    max-width: 480px;
+}
+
 #gl {
     aspect-ratio: 1;
-    height: auto;
-    max-width: 480px;
+    height: 100%;
     width: 100%;
     display: block;
     border: 2px solid darkcyan;
@@ -17,7 +20,6 @@ html {
 #sliders {
     display: grid;
     gap: 0.5rem;
-    max-width: 480px;
     width: 100%;
 }
 
