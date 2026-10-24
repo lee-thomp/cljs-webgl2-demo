@@ -18,6 +18,7 @@ jobs:
           distribution: temurin
           java-version: 21
 
+# (Hopefully) cache the Java/Maven deps
       - uses: https://code.forgejo.org/actions/cache@v4
         with:
           path: ~/.m2/repository

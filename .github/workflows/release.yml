@@ -26,16 +26,29 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: package-lock.json
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
+
+# (Hopefully) cache the Java/Maven deps
+      - uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: m2-${{ runner.os }}-${{ hashFiles('shadow-cljs.edn') }}
+          restore-keys: |
+            m2-${{ runner.os }}-
+
       - run: npm ci
       - run: npx shadow-cljs release demo
+
       - uses: actions/upload-pages-artifact@v3
         with:
           name: cljs-webgl2-demo
           path: public
+
       - id: deployment
         uses: actions/deploy-pages@v4
         with:
