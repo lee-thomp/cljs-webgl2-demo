@@ -382,17 +382,17 @@
       (.uniformMatrix4fv matrix-location false matrix)
       (.drawArrays glc/triangles 0 (* 16 6)))))
 
-(defn start-animation-loop [canvas-id trs]
+(defn start-animation-loop [canvas-id trs spin-rate]
   (let [canvas (js/document.getElementById canvas-id)
         gl-env (init-gl canvas)
         frame-id (volatile! nil)
-        stopped? (volatile! false)]
+        stopped? (volatile! false)
+        spin-y (volatile! 0)]
     (letfn [(loop [timestamp]
               (when-not @stopped?
                 ;; Gently rotate
-                (swap! trs update :ry #(mod (+ % 0.005)
-                                            (* 2 js/Math.PI)))
-                (draw gl-env @trs)
+                (vswap! spin-y + @spin-rate)
+                (draw gl-env (update @trs :ry + @spin-y))
                 (vreset! frame-id (js/requestAnimationFrame loop))))]
       (vreset! frame-id (js/requestAnimationFrame loop))
       ;; Return a stop callback so the caller can clean up when it needs to

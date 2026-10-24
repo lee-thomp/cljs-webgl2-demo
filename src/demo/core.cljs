@@ -8,6 +8,8 @@
            :rx -0.3 :ry 0 :rz 0
            :scale 1}))
 
+(defonce spin-rate (r/atom 0))
+
 (defn slider [key min max]
   [:div
    [:label (str key " " (.toFixed (key @trs) 2))]
@@ -26,7 +28,7 @@
      {:component-did-mount
       #(vreset! stop-animation-loop
                 ;; `start-animation-loop` returns a callback to stop itself with
-                (d/start-animation-loop "gl" trs))
+                (d/start-animation-loop "gl" trs spin-rate))
 
       :component-will-unmount
       #(when-let [stop @stop-animation-loop]
@@ -45,8 +47,12 @@
           (slider :ty -400 400)
           (slider :tz -2000 0)
           (slider :rx (- js/Math.PI) js/Math.PI)
-          (slider :ry 0 (* 2 js/Math.PI))
+          (slider :ry (- js/Math.PI) js/Math.PI)
           (slider :rz (- js/Math.PI) js/Math.PI)
+          [:p "spin-rate"]
+          [:button {:on-click #(reset! spin-rate -0.005)} "←"]
+          [:button {:on-click #(reset! spin-rate 0)} "✕"]
+          [:button {:on-click #(reset! spin-rate 0.005)} "→"]
           (slider :scale -2 2)]
          [:p "This is a small WebGL2 demo made using "
           [:a {:href "https://clojurescript.org"} "ClojureScript"]
