@@ -311,6 +311,7 @@
         program (create-program ctx vertex-shader fragment-shader)
         position-attr-location (.getAttribLocation ctx program "a_position")
         color-attr-location (.getAttribLocation ctx program "a_color")
+        matrix-location (.getUniformLocation ctx program "u_matrix")
         position-buffer (.createBuffer ctx)
         color-buffer (.createBuffer ctx)
         vao (.createVertexArray ctx)]
@@ -350,12 +351,11 @@
                               stride
                               offset)))
 
-    {:ctx ctx :program program :vao vao}))
+    {:ctx ctx :program program :vao vao :matrix-location matrix-location}))
 
 (defn draw [gl-env trs]
-  (let [{:keys [ctx program vao]} gl-env
+  (let [{:keys [ctx program vao matrix-location]} gl-env
         {:keys [tx ty tz rx ry rz scale]} trs
-        matrix-location (.getUniformLocation ctx program "u_matrix")
         canvas (.-canvas ctx)
         _ (resize-canvas-dwim canvas)
         width (.-width canvas)
