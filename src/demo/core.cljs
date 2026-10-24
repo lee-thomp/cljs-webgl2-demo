@@ -67,7 +67,11 @@
           " via "
           [:a {:href "https://shadow-cljs.org/"} "shadow-cljs"]
           ". The content of the demo is all really taken from "
-          [:a {:href "https://webgl2fundamentals.org/"} "webgl2fundamentals.org"]
+          [:a {:href "https://webgl2fundamentals.org/"}
+           "webgl2fundamentals.org"]
+          ". View the source for this demo at "
+          [:a {:href "https://github.com/lee-thomp/cljs-webgl2-demo"}
+           "github.com/lee-thomp/cljs-webgl2-demo"]
           "."]])})))
 
 (defn main []
