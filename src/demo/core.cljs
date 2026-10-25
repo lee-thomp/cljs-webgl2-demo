@@ -9,7 +9,7 @@
            :rx -0.3 :ry 0 :rz 0
            :scale 1}))
 
-(defonce spin-rate (r/atom 0))
+(defonce spin-rate (atom 0))
 
 (defn slider [key min max]
   [:div.control-row
