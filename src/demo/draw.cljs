@@ -293,80 +293,67 @@
         (.deleteProgram ctx program)
         nil))))
 
-(defn resize-canvas-dwim [canvas]
-  (let [client-width (.-clientWidth canvas)
-        client-height (.-clientHeight canvas)
-        width (.-width canvas)
-        height (.-height canvas)
+(defn resize-canvas! [canvas]
+  (let [client-width       (.-clientWidth canvas)
+        client-height      (.-clientHeight canvas)
+        width              (.-width canvas)
+        height             (.-height canvas)
         device-pixel-ratio (or (.-devicePixelRatio js/window) 1)
-        display-width (max 1 (.round js/Math (* client-width device-pixel-ratio)))
-        display-height (max 1 (.round js/Math (* client-height device-pixel-ratio)))
-        needs-resize? (or (not= display-width width)
+        display-width      (max 1 (.round js/Math (* client-width device-pixel-ratio)))
+        display-height     (max 1 (.round js/Math (* client-height device-pixel-ratio)))
+        needs-resize?      (or (not= display-width width)
                           (not= display-height height))]
     (when needs-resize?
       (set! (.-width canvas) display-width)
       (set! (.-height canvas) display-height))
     needs-resize?))
 
+(defn configure-attribute [ctx location buffer data size type normalise?]
+  (let [stride 0
+        offset 0]
+    (doto ctx
+      (.enableVertexAttribArray location)
+      (.bindBuffer glc/array-buffer buffer)
+      (.bufferData glc/array-buffer
+                   data
+                   glc/static-draw)
+      (.vertexAttribPointer location
+                            size
+                            type
+                            normalise?
+                            stride
+                            offset))))
+
 (defn init-gl [canvas]
-  (let [ctx (.getContext canvas "webgl2")
-        vertex-shader (create-shader ctx glc/vertex-shader
-                                     (rc/inline "shaders/cube.vert"))
-        fragment-shader (create-shader ctx glc/fragment-shader
-                                       (rc/inline "shaders/cube.frag"))
-        program (create-program ctx vertex-shader fragment-shader)
+  (let [ctx                    (.getContext canvas "webgl2")
+        vertex-shader          (create-shader ctx glc/vertex-shader
+                                              (rc/inline "shaders/cube.vert"))
+        fragment-shader        (create-shader ctx glc/fragment-shader
+                                              (rc/inline "shaders/cube.frag"))
+        program                (create-program ctx vertex-shader fragment-shader)
         position-attr-location (.getAttribLocation ctx program "a_position")
-        color-attr-location (.getAttribLocation ctx program "a_color")
-        matrix-location (.getUniformLocation ctx program "u_matrix")
-        position-buffer (.createBuffer ctx)
-        color-buffer (.createBuffer ctx)
-        vao (.createVertexArray ctx)]
+        color-attr-location    (.getAttribLocation ctx program "a_color")
+        matrix-location        (.getUniformLocation ctx program "u_matrix")
+        position-buffer        (.createBuffer ctx)
+        color-buffer           (.createBuffer ctx)
+        vao                    (.createVertexArray ctx)]
     (doto ctx
       (.enable glc/cull-face)
       (.enable glc/depth-test)
-      (.bindVertexArray vao))
-    (let [size 3
-          type glc/float
-          normalise false
-          stride 0
-          offset 0]
-      (doto ctx
-        (.bindBuffer glc/array-buffer position-buffer)
-        (.enableVertexAttribArray position-attr-location)
-        (.bufferData glc/array-buffer
-                     vertices
-                     glc/static-draw)
-        (.vertexAttribPointer position-attr-location
-                              size
-                              type
-                              normalise
-                              stride
-                              offset)))
-    (let [size 3
-          type glc/unsigned-byte
-          normalise true
-          stride 0
-          offset 0]
-      (doto ctx
-        (.bindBuffer glc/array-buffer color-buffer)
-        (.bufferData glc/array-buffer
-                     colors
-                     glc/static-draw)
-        (.enableVertexAttribArray color-attr-location)
-        (.vertexAttribPointer color-attr-location
-                              size
-                              type
-                              normalise
-                              stride
-                              offset)))
-
+      (.bindVertexArray vao)
+      (configure-attribute position-attr-location
+                           position-buffer
+                           vertices 3 glc/float false)
+      (configure-attribute color-attr-location
+                           color-buffer
+                           colors 3 glc/unsigned-byte true))
     {:ctx ctx :program program :vao vao :matrix-location matrix-location}))
 
 (defn draw [gl-env trs]
   (let [{:keys [ctx program vao matrix-location]} gl-env
         {:keys [tx ty tz rx ry rz scale]} trs
         canvas (.-canvas ctx)
-        _ (resize-canvas-dwim canvas)
+        _ (resize-canvas! canvas)
         width (.-width canvas)
         height (.-height canvas)
         aspect (/ width height)
@@ -393,11 +380,11 @@
       (.drawArrays glc/triangles 0 (* 16 6)))))
 
 (defn start-animation-loop [canvas-id trs spin-rate]
-  (let [canvas (js/document.getElementById canvas-id)
-        gl-env (init-gl canvas)
+  (let [canvas   (js/document.getElementById canvas-id)
+        gl-env   (init-gl canvas)
         frame-id (volatile! nil)
         stopped? (volatile! false)
-        spin-y (volatile! 0)]
+        spin-y   (volatile! 0)]
     (letfn [(loop [timestamp]
               (when-not @stopped?
                 ;; Gently rotate and clamp angle to 2π
