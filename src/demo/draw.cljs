@@ -321,7 +321,10 @@
         position-buffer (.createBuffer ctx)
         color-buffer (.createBuffer ctx)
         vao (.createVertexArray ctx)]
-    (.bindVertexArray ctx vao)
+    (doto ctx
+      (.enable glc/cull-face)
+      (.enable glc/depth-test)
+      (.bindVertexArray vao))
     (let [size 3
           type glc/float
           normalise false
@@ -384,8 +387,6 @@
       (.clearColor 0 0 0 0)
       (.clear (bit-or glc/color-buffer-bit
                       glc/depth-buffer-bit))
-      (.enable glc/cull-face)
-      (.enable glc/depth-test)
       (.useProgram program)
       (.bindVertexArray vao)
       (.uniformMatrix4fv matrix-location false matrix)
