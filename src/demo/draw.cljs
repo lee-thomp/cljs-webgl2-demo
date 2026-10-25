@@ -400,8 +400,9 @@
         spin-y (volatile! 0)]
     (letfn [(loop [timestamp]
               (when-not @stopped?
-                ;; Gently rotate
-                (vswap! spin-y + @spin-rate)
+                ;; Gently rotate and clamp angle to 2π
+                (vswap! spin-y #(mod (+ % @spin-rate)
+                                     (* 2 js/Math.PI)))
                 (draw gl-env (update @trs :ry + @spin-y))
                 (vreset! frame-id (js/requestAnimationFrame loop))))]
       (vreset! frame-id (js/requestAnimationFrame loop))
