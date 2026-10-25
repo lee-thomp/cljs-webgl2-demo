@@ -11,17 +11,18 @@
 
 (defonce spin-rate (atom 0))
 
-(defn slider [key min max]
-  [:div.control-row
-   [:label (str key " " (.toFixed (key @trs) 2))]
-   [:input {:id key
-            :type "range"
-            :min min
-            :max max
-            :step 0.01
-            :value (key @trs)
-            :on-change #(swap! trs assoc key
-                               (-> % .-target .-value js/parseFloat))}]])
+(defn slider [k min max]
+  (let [id (name k)]
+    [:div.control-row
+     [:label {:for id} (str id " " (.toFixed (k @trs) 2))]
+     [:input {:id id
+              :type "range"
+              :min min
+              :max max
+              :step 0.01
+              :value (k @trs)
+              :on-change #(swap! trs assoc k
+                                 (-> % .-target .-value js/parseFloat))}]]))
 
 (defn demo-ui []
   (let [stop-animation-loop (volatile! nil)]
